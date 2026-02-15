@@ -1,7 +1,17 @@
+import { useContext, useEffect } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { SiPhosphoricons } from "react-icons/si";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Home() {
+  const { isLoggedIn,logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+  useEffect(() => {
+  if (isLoggedIn) {
+    navigate("/dashboard");
+  }
+}, [isLoggedIn, navigate]);
   return (
     <>
       
@@ -31,12 +41,20 @@ export default function Home() {
 
        
         <div className="flex items-center gap-6">
-          <div className="text-gray-300 cursor-pointer hover:text-white transition">
-            Login
-          </div>
+          {!isLoggedIn && (
+            <div className="text-gray-300 cursor-pointer hover:text-white transition">
+              <button onClick={() => navigate("/login")}>Login</button>
+            </div>
+          )}
+
+          {isLoggedIn && (
+            <div className="text-gray-300 cursor-pointer hover:text-white transition">
+              <button onClick={() => logout()}>Logout</button>
+            </div>
+          )}
 
           <div className="bg-teal-400 text-black px-6 py-2 rounded-lg font-semibold cursor-pointer shadow-lg shadow-teal-400/30 hover:shadow-teal-400/50 transition">
-            Get Started
+            <button onClick={() => navigate("/login")}>Get Started</button>
           </div>
         </div>
       </nav>
@@ -51,11 +69,11 @@ export default function Home() {
           Intercept, inspect, modify and replay network traffic directly from
           your browser.
         </p>
-
-        <button className="bg-teal-400 text-black px-8 py-3 rounded-xl text-lg font-semibold shadow-lg shadow-teal-400/40 hover:shadow-teal-400/60 transition">
-          Get Started
-        </button>
-
+        {!isLoggedIn && (
+          <button   onClick ={() =>navigate("/login")}  className="bg-teal-400 text-black px-8 py-3 rounded-xl text-lg font-semibold shadow-lg shadow-teal-400/40 hover:shadow-teal-400/60 transition">
+            Get Started
+          </button>
+        )}
        
         <div className="absolute w-225 h-87.5 bg-teal-400/20 blur-[140px] -z-10 top-105" />
 
