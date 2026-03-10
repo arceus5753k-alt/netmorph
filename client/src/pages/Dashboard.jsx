@@ -5,7 +5,7 @@ import AppNavbar from "../components/AppNavbar";
 import Rules from "./Rules";
 
 const Dashboard = ()=>{
-    const {isLoggedIn,setIsLoggedIn} = useContext(AuthContext);
+    const {isLoggedIn} = useContext(AuthContext);
     const navigate = useNavigate();
     useEffect(()=>{
         if(!isLoggedIn){
