@@ -14,7 +14,6 @@ connectDB();
 
 
 app.use(mockMiddleware);
-
 app.use("/api", ruleRoutes);
 
 app.get("/",(req,res)=>{

@@ -5,7 +5,7 @@ const MockRule = require("../models/MockRule");
 // CREATE RULE
 router.post("/rules", async (req, res) => {
   try {
-    const { name, endpoint, method, response, delay, enabled } = req.body;
+    const { name, endpoint, method, response, delay, enabled ,statusCode} = req.body;
 
     const rule = new MockRule({
       name,
@@ -13,7 +13,8 @@ router.post("/rules", async (req, res) => {
       method,
       response,
       delay,
-      enabled
+      enabled,
+      statusCode
     });
 
     await rule.save();

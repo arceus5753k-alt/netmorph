@@ -9,6 +9,10 @@ const mockRuleSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    response : {
+      type : mongoose.Schema.Types.Mixed,
+      required : true,
+    },
     method: {
       type: String,
       enum: ["GET", "POST", "PUT", "DELETE"],
@@ -22,8 +26,12 @@ const mockRuleSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    statusCode : {
+      type : Number,
+      default : 200,
+    }
   },
-  { timestamp: true },
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("MockRule", mockRuleSchema);
