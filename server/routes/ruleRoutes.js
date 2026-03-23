@@ -14,7 +14,8 @@ router.post("/rules", async (req, res) => {
       response,
       delay,
       enabled,
-      statusCode
+      statusCode,
+      query
     });
 
     await rule.save();

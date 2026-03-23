@@ -29,6 +29,10 @@ const mockRuleSchema = new mongoose.Schema(
     statusCode : {
       type : Number,
       default : 200,
+    },
+    query : {
+      type : Object,
+      default : {},
     }
   },
   { timestamps: true },
