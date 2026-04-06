@@ -5,7 +5,7 @@ import "./index.css";
 import {RouterProvider,createBrowserRouter} from "react-router-dom";
 import Login from "./pages/Login.jsx"
 import Dashboard from "./pages/Dashboard.jsx"
-import { AuthProvider } from "./context/AuthContext.jsx";
+import { AuthProvider } from "./context/AuthProvider.jsx";
 
 const router = createBrowserRouter([
   {

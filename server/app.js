@@ -13,7 +13,7 @@ app.use(express.json());
 connectDB();
 
 
-app.use("/mock", mockMiddleware);
+app.use(mockMiddleware);
 app.use("/api", ruleRoutes);
 
 app.get("/",(req,res)=>{

@@ -9,7 +9,7 @@ const mockMiddleware = async (req, res, next) => {
 
     const queryMatches =(ruleQuery, reqQuery)=>{
       for(let key in ruleQuery) {
-        if(ruleQuery[key] != reqQuery[key]) {
+        if(String(ruleQuery[key]) != String(reqQuery[key])) {
           return false;
         }
       }
