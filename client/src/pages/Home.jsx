@@ -14,7 +14,7 @@ export default function Home() {
 }, [isLoggedIn, navigate]);
   return (
     <>
-      
+      <h1 style={{ color: "red" }}>TEST</h1>
       <nav className="w-full flex items-center justify-between px-14 py-6 text-white">
         
         <div className="flex items-center gap-3 cursor-pointer">

@@ -13,8 +13,8 @@ app.use(express.json());
 connectDB();
 
 
-app.use(mockMiddleware);
 app.use("/api", ruleRoutes);
+app.use(mockMiddleware);
 
 app.get("/",(req,res)=>{
   res.send("NETMORPH API running")

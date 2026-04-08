@@ -7,17 +7,17 @@ export default function Rules() {
     name: "",
     endpoint: "",
     method: "GET",
-    response: "",
+    response: "",                  //{"userId":":id","message":"dynamic working"}
     delay: 0,
     statusCode: 200,
     query: "{}",
+    priority: 0,
   });
 
-  // backend returns array directly
   const fetchRules = () => {
     fetch("http://localhost:5000/api/rules")
       .then((res) => res.json())
-      .then((data) => setRules(data.rules)) // FIXED
+      .then((data) => setRules(data.rules))
       .catch((err) => console.error(err));
   };
 
@@ -26,38 +26,49 @@ export default function Rules() {
   }, []);
 
   // CREATE
-  const handleSubmit = async () => {
-    try {
-      await fetch("http://localhost:5000/api/rules", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...form,
-          response: JSON.parse(form.response),
-          query: JSON.parse(form.query),
-        }),
-      });
+const handleSubmit = async () => {
+  let parsedResponse = {};
+  let parsedQuery = {};
 
-      fetchRules();
+  try {
+    parsedResponse = form.response ? JSON.parse(form.response) : {};
+    parsedQuery = form.query ? JSON.parse(form.query) : {};
+  } catch (err) {
+    alert("Invalid JSON format");
+    return;
+  }
 
-      setForm({
-        name: "",
-        endpoint: "",
-        method: "GET",
-        response: "",
-        delay: 0,
-        statusCode: 200,
-        query: "{}",
-      });
-    } catch (err) {
-      console.error(err);
-      alert("Invalid JSON format");
-    }
-  };
+  try {
+    await fetch("http://localhost:5000/api/rules", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...form,
+        response: parsedResponse,
+        query: parsedQuery,
+      }),
+    });
 
-  // 🔘 TOGGLE
+    fetchRules();
+
+    setForm({
+      name: "",
+      endpoint: "",
+      method: "GET",
+      response: "",
+      delay: 0,
+      statusCode: 200,
+      query: "{}",
+      priority: 0,
+    });
+
+  } catch (err) {
+    console.error(err);
+  }
+};
+
   const toggleRule = async (id) => {
     await fetch(`http://localhost:5000/api/rules/${id}/toggle`, {
       method: "PATCH",
@@ -65,7 +76,6 @@ export default function Rules() {
     fetchRules();
   };
 
-  // 🗑️ DELETE
   const deleteRule = async (id) => {
     await fetch(`http://localhost:5000/api/rules/${id}`, {
       method: "DELETE",
@@ -77,8 +87,15 @@ export default function Rules() {
     <div style={{ padding: "20px" }}>
       <h2>Rules</h2>
 
-      {/* 🔥 CREATE FORM */}
-      <div style={{ marginBottom: "20px" }}>
+      {/* CREATE FORM */}
+      <div
+        style={{
+          marginBottom: "20px",
+          display: "flex",
+          gap: "10px",
+          flexWrap: "wrap",
+        }}
+      >
         <input
           placeholder="Name"
           value={form.name}
@@ -86,7 +103,7 @@ export default function Rules() {
         />
 
         <input
-          placeholder="/hello"
+          placeholder="/api/hello"
           value={form.endpoint}
           onChange={(e) => setForm({ ...form, endpoint: e.target.value })}
         />
@@ -109,16 +126,18 @@ export default function Rules() {
 
         <input
           type="number"
-          placeholder="Delay (ms)"
+          placeholder="Delay"
           value={form.delay}
           onChange={(e) => setForm({ ...form, delay: Number(e.target.value) })}
         />
 
         <input
           type="number"
-          placeholder="Status Code"
+          placeholder="Status"
           value={form.statusCode}
-          onChange={(e) => setForm({ ...form, statusCode: Number(e.target.value) })}
+          onChange={(e) =>
+            setForm({ ...form, statusCode: Number(e.target.value) })
+          }
         />
 
         <input
@@ -127,10 +146,20 @@ export default function Rules() {
           onChange={(e) => setForm({ ...form, query: e.target.value })}
         />
 
+        {/* 🔥 THIS WAS MISSING */}
+        <input
+          type="number"
+          placeholder="Priority"
+          value={form.priority}
+          onChange={(e) =>
+            setForm({ ...form, priority: Number(e.target.value) })
+          }
+        />
+
         <button onClick={handleSubmit}>Create Rule</button>
       </div>
 
-      {/* 🔥 RULE LIST */}
+      {/* RULE LIST */}
       {rules.length === 0 ? (
         <p>No rules found</p>
       ) : (
@@ -147,15 +176,16 @@ export default function Rules() {
               <b>{rule.method}</b> {rule.endpoint}
             </div>
 
+            {/* 🔥 SHOW PRIORITY */}
+            <div>Priority: {rule.priority}</div>
+
             <div>Status: {rule.enabled ? "ON" : "OFF"}</div>
 
             <button onClick={() => toggleRule(rule._id)}>
               {rule.enabled ? "Disable" : "Enable"}
             </button>
 
-            <button onClick={() => deleteRule(rule._id)}>
-              Delete
-            </button>
+            <button onClick={() => deleteRule(rule._id)}>Delete</button>
           </div>
         ))
       )}
