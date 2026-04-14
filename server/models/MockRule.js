@@ -28,7 +28,7 @@ const mockRuleSchema = new mongoose.Schema(
       default: {},
     },
 
-    // 🔥 ADD THIS (VERY IMPORTANT)
+    // 
     priority: {
       type: Number,
       default: 0,

@@ -122,5 +122,34 @@ router.patch("/rules/:id/toggle", async (req, res) => {
   }
 });
 
+// UPDATE RULE
+router.put("/rules/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updatedRule = await MockRule.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true }
+    );
+
+    if (!updatedRule) {
+      return res.status(404).json({
+        message: "Rule not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Rule updated successfully",
+      rule: updatedRule,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Error updating rule",
+      error: error.message,
+    });
+  }
+});
 
 module.exports = router;

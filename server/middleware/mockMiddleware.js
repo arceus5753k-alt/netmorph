@@ -61,21 +61,30 @@ const replaceParams = (response, params) => {
 // MAIN MIDDLEWARE
 const mockMiddleware = async (req, res, next) => {
   try {
+    // 🔥 CHANGED: removed DB-level sorting
     const rules = await MockRule.find({
       method: req.method,
       enabled: true,
-    }).sort({ priority: -1 }); // priority
+    });
 
-    const matchedRule = rules.find((rule) => {
+    // 🔥 CHANGED: find → filter (collect ALL matches)
+    const matchedRules = rules.filter((rule) => {
       return (
         matchRoute(rule.endpoint, req.path) &&
         queryMatches(rule.query || {}, req.query)
       );
     });
 
-    if (!matchedRule) return next();
+    // 🔥 NEW: if no match
+    if (matchedRules.length === 0) return next();
 
-    // PARAM EXTRACTION + REPLACEMENT
+    // 🔥🔥🔥 MAIN CHANGE: apply priority here
+    matchedRules.sort((a, b) => b.priority - a.priority);
+
+    // 🔥 NEW: pick best rule
+    const matchedRule = matchedRules[0];
+
+    // PARAM EXTRACTION + REPLACEMENT (same)
     const params = extractParams(matchedRule.endpoint, req.path);
     const finalResponse = replaceParams(matchedRule.response, params);
 
