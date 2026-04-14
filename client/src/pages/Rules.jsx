@@ -7,7 +7,7 @@ export default function Rules() {
     name: "",
     endpoint: "",
     method: "GET",
-    response: "",                  //{"userId":":id","message":"dynamic working"}
+    response: "",                 
     delay: 0,
     statusCode: 200,
     query: "{}",
